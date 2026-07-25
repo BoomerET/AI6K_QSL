@@ -30,3 +30,13 @@ class RectangleElement:
     width_in: float
     height_in: float
     line_width_pt: float = 0.5
+
+
+@dataclass(frozen=True)
+class ImageElement:
+    file: str
+    x_in: float
+    y_in: float
+    width_in: float
+    height_in: float
+    preserve_aspect_ratio: bool = True

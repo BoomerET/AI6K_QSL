@@ -6,22 +6,22 @@ elements:
   - type: text
     value: "{{ callsign }}"
     x_in: 2.75
-    y_in: 0.88
+    y_in: 0.78
     font_name: Helvetica-Bold
     font_size: 42
     align: center
 
   - type: line
     x1_in: 1.55
-    y1_in: 1.10
+    y1_in: 1.02
     x2_in: 3.95
-    y2_in: 1.10
+    y2_in: 1.02
     line_width_pt: 0.6
 
   - type: text
     value: "{{ name }}"
     x_in: 2.75
-    y_in: 1.48
+    y_in: 1.40
     font_name: Helvetica
     font_size: 13
     align: center
@@ -29,30 +29,23 @@ elements:
   - type: text
     value: "{{ location }}"
     x_in: 2.75
-    y_in: 1.75
+    y_in: 1.67
     font_name: Helvetica
     font_size: 11
     align: center
 
-  - type: rectangle
-    x_in: 2.18
-    y_in: 2.02
-    width_in: 1.14
-    height_in: 0.62
-    line_width_pt: 0.35
-
-  - type: text
-    value: NORTH TEXAS
-    x_in: 2.75
-    y_in: 2.39
-    font_name: Helvetica
-    font_size: 6.5
-    align: center
+  - type: image
+    file: assets/texas-outline.svg
+    x_in: 2.22
+    y_in: 1.88
+    width_in: 1.06
+    height_in: 0.82
+    preserve_aspect_ratio: true
 
   - type: text
     value: "{{ tagline }}"
     x_in: 2.75
-    y_in: 3.08
+    y_in: 3.05
     font_name: Helvetica-Oblique
     font_size: 9.5
     align: center

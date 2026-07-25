@@ -1,0 +1,85 @@
+card:
+  width_in: 5.5
+  height_in: 3.5
+
+elements:
+  - type: text
+    value: "QSL"
+    x_in: 0.35
+    y_in: 0.43
+    font_name: Helvetica-Bold
+    font_size: 18
+    align: left
+
+  - type: text
+    value: "{{ callsign }}"
+    x_in: 5.15
+    y_in: 0.43
+    font_name: Helvetica-Bold
+    font_size: 15
+    align: right
+
+  - type: line
+    x1_in: 0.35
+    y1_in: 0.60
+    x2_in: 5.15
+    y2_in: 0.60
+    line_width_pt: 0.7
+
+  - type: text
+    value: "To Radio:"
+    x_in: 0.35
+    y_in: 0.95
+    font_name: Helvetica
+    font_size: 9
+    align: left
+
+  - type: text
+    value: "{{ contacted_callsign }}"
+    x_in: 1.17
+    y_in: 0.95
+    font_name: Helvetica-Bold
+    font_size: 14
+    align: left
+
+  - type: qso_table
+    x_in: 0.35
+    y_in: 1.12
+    width_in: 4.80
+
+  - type: text
+    value: "Remarks:"
+    x_in: 0.35
+    y_in: 2.02
+    font_name: Helvetica-Bold
+    font_size: 8
+    align: left
+
+  - type: text
+    value: "{{ remarks }}"
+    x_in: 1.00
+    y_in: 2.02
+    font_name: Helvetica
+    font_size: 8.5
+    align: left
+
+  - type: line
+    x1_in: 0.35
+    y1_in: 2.19
+    x2_in: 5.15
+    y2_in: 2.19
+    line_width_pt: 0.35
+
+  - type: station_signature
+    x_in: 2.65
+    y_in: 2.70
+    width_in: 2.50
+    align: right
+
+  - type: text
+    value: "Signature: __________________________"
+    x_in: 5.15
+    y_in: 3.23
+    font_name: Helvetica
+    font_size: 8
+    align: right

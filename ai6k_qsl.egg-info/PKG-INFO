@@ -6,4 +6,6 @@ Requires-Python: >=3.11
 License-File: LICENSE
 Requires-Dist: PyYAML>=6.0
 Requires-Dist: reportlab>=4.0
+Requires-Dist: svglib>=1.5
+Requires-Dist: requests>=2.32
 Dynamic: license-file
