@@ -19,7 +19,8 @@ def qso_from_adif(record: dict[str, str]) -> QSO:
         rst_sent=record.get("RST_SENT", "").strip(),
         rst_received=record.get("RST_RCVD", "").strip(),
         remarks=record.get("COMMENT", "").strip(),
-        qsl_message=record.get("QSLMSG", "").strip() or "TNX QSO",
+        #qsl_message=record.get("QSLMSG", "").strip() or "TNX QSO",
+        qsl_message="TNX",
     )
 
 
