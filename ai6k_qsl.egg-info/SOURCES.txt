@@ -14,4 +14,6 @@ qslstudio/elements.py
 qslstudio/front.py
 qslstudio/layout.py
 qslstudio/sheet.py
+qslstudio/template.py
 tests/test_sheet.py
+tests/test_template.py

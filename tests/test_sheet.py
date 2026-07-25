@@ -1,8 +1,5 @@
-from pathlib import Path
-
-from qslstudio.layout import Cardstock
+from qslstudio.layout import Cardstock, PrinterCalibration
 from qslstudio.sheet import Sheet
-from qslstudio.layout import PrinterCalibration
 
 
 def make_stock() -> Cardstock:
@@ -19,10 +16,10 @@ def make_stock() -> Cardstock:
     )
 
 
-def test_card_origins() -> None:
+def test_panel_origins() -> None:
     sheet = Sheet(make_stock(), PrinterCalibration())
 
-    assert sheet._card_origin(0) == (0.0, 0.0)
-    assert sheet._card_origin(1) == (3.5, 0.0)
-    assert sheet._card_origin(2) == (0.0, 5.5)
-    assert sheet._card_origin(3) == (3.5, 5.5)
+    assert sheet._panel_origin(0) == (0.0, 0.0)
+    assert sheet._panel_origin(1) == (3.5, 0.0)
+    assert sheet._panel_origin(2) == (0.0, 5.5)
+    assert sheet._panel_origin(3) == (3.5, 5.5)
