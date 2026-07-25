@@ -14,6 +14,7 @@ dependencies = [
 
 [project.scripts]
 qsl-calibration = "qslstudio.calibration:main"
+qsl-front = "qslstudio.front:main"
 
 [tool.setuptools.packages.find]
 include = ["qslstudio*"]

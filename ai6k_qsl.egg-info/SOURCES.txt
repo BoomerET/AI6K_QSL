@@ -9,4 +9,9 @@ ai6k_qsl.egg-info/requires.txt
 ai6k_qsl.egg-info/top_level.txt
 qslstudio/__init__.py
 qslstudio/calibration.py
+qslstudio/card.py
+qslstudio/elements.py
+qslstudio/front.py
 qslstudio/layout.py
+qslstudio/sheet.py
+tests/test_sheet.py
