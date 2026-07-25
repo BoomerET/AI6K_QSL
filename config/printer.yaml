@@ -1,0 +1,10 @@
+printer:
+  model: Epson ET-3760
+
+  # Applied to the entire printed layout after calibration.
+  x_offset_in: 0.0
+  y_offset_in: 0.0
+
+  # Leave at 1.0 unless measured printer output shows dimensional distortion.
+  x_scale: 1.0
+  y_scale: 1.0

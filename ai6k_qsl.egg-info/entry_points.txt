@@ -1,0 +1,2 @@
+[console_scripts]
+qsl-calibration = qslstudio.calibration:main

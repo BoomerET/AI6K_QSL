@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai6k-qsl"
+version = "0.1.0"
+description = "QSL card layout and print calibration tools for AI6K"
+requires-python = ">=3.11"
+dependencies = [
+    "PyYAML>=6.0",
+    "reportlab>=4.0",
+]
+
+[project.scripts]
+qsl-calibration = "qslstudio.calibration:main"
+
+[tool.setuptools.packages.find]
+include = ["qslstudio*"]
