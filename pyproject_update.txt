@@ -1,0 +1,10 @@
+Add this script under `[project.scripts]`:
+
+qsl-back = "qslstudio.back:main"
+
+Your scripts section should resemble:
+
+[project.scripts]
+qsl-calibration = "qslstudio.calibration:main"
+qsl-front = "qslstudio.front:main"
+qsl-back = "qslstudio.back:main"

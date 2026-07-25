@@ -10,11 +10,15 @@ requires-python = ">=3.11"
 dependencies = [
     "PyYAML>=6.0",
     "reportlab>=4.0",
+    "svglib>=1.5",
+    "requests>=2.32",
 ]
 
 [project.scripts]
 qsl-calibration = "qslstudio.calibration:main"
 qsl-front = "qslstudio.front:main"
+qsl-back = "qslstudio.back:main"
+qsl-test = "qslstudio.test_connection:main"
 
 [tool.setuptools.packages.find]
 include = ["qslstudio*"]

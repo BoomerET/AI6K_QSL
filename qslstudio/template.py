@@ -5,7 +5,17 @@ from typing import Any
 import yaml
 
 from .card import Card
-from .elements import LineElement, RectangleElement, TextElement
+from .components import (
+    ComponentContext,
+    build_qso_table,
+    build_station_signature,
+)
+from .elements import (
+    ImageElement,
+    LineElement,
+    RectangleElement,
+    TextElement,
+)
 
 
 @dataclass(frozen=True)
@@ -29,14 +39,18 @@ def _require_float(data: dict[str, Any], key: str) -> float:
     return float(data[key])
 
 
-def load_card_template(path: Path, context: TemplateContext | None = None) -> Card:
+def load_card_template(
+    path: Path,
+    context: TemplateContext | None = None,
+) -> Card:
     context = context or TemplateContext({})
+    component_context = ComponentContext(context.values)
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
 
     card_data = data.get("card", {})
     card = Card(
-        width_in=float(card_data.get("width_in", 3.5)),
-        height_in=float(card_data.get("height_in", 5.5)),
+        width_in=float(card_data.get("width_in", 5.5)),
+        height_in=float(card_data.get("height_in", 3.5)),
     )
 
     for index, raw in enumerate(data.get("elements", []), start=1):
@@ -78,6 +92,39 @@ def load_card_template(path: Path, context: TemplateContext | None = None) -> Ca
                     line_width_pt=float(raw.get("line_width_pt", 0.5)),
                 )
             )
+
+        elif element_type == "image":
+            card.add(
+                ImageElement(
+                    file=str(context.render(raw["file"])),
+                    x_in=_require_float(raw, "x_in"),
+                    y_in=_require_float(raw, "y_in"),
+                    width_in=_require_float(raw, "width_in"),
+                    height_in=_require_float(raw, "height_in"),
+                    preserve_aspect_ratio=bool(
+                        raw.get("preserve_aspect_ratio", True)
+                    ),
+                )
+            )
+
+        elif element_type == "qso_table":
+            for element in build_qso_table(
+                x_in=_require_float(raw, "x_in"),
+                y_in=_require_float(raw, "y_in"),
+                width_in=_require_float(raw, "width_in"),
+                context=component_context,
+            ):
+                card.add(element)
+
+        elif element_type == "station_signature":
+            for element in build_station_signature(
+                x_in=_require_float(raw, "x_in"),
+                y_in=_require_float(raw, "y_in"),
+                width_in=_require_float(raw, "width_in"),
+                align=str(raw.get("align", "right")),
+                context=component_context,
+            ):
+                card.add(element)
 
         else:
             raise ValueError(

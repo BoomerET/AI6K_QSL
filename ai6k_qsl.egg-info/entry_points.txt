@@ -1,3 +1,5 @@
 [console_scripts]
+qsl-back = qslstudio.back:main
 qsl-calibration = qslstudio.calibration:main
 qsl-front = qslstudio.front:main
+qsl-test = qslstudio.test_connection:main
