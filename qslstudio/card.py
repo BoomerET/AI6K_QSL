@@ -8,8 +8,9 @@ CardElement = Union[TextElement, LineElement, RectangleElement]
 
 @dataclass
 class Card:
-    width_in: float = 3.5
-    height_in: float = 5.5
+    # Logical QSL-card dimensions: landscape.
+    width_in: float = 5.5
+    height_in: float = 3.5
     elements: list[CardElement] = field(default_factory=list)
 
     def add(self, element: CardElement) -> CardElement:
