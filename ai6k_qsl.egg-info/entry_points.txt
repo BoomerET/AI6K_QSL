@@ -1,2 +1,3 @@
 [console_scripts]
 qsl-calibration = qslstudio.calibration:main
+qsl-front = qslstudio.front:main
