@@ -1,0 +1,17 @@
+paper:
+  width_in: 8.5
+  height_in: 11.0
+
+card:
+  width_in: 3.5
+  height_in: 5.5
+  columns: 2
+  rows: 2
+  gutter_x_in: 0.0
+  gutter_y_in: 0.0
+  origin_x_in: 0.0
+  origin_y_in: 0.0
+
+unused_strip:
+  side: right
+  width_in: 1.5
