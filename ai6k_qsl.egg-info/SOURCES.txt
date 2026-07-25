@@ -19,10 +19,13 @@ qslstudio/models.py
 qslstudio/sheet.py
 qslstudio/template.py
 qslstudio/test_connection.py
+qslstudio/adif/__init__.py
+qslstudio/adif/parser.py
 qslstudio/wavelog/__init__.py
 qslstudio/wavelog/client.py
 qslstudio/wavelog/config.py
 qslstudio/wavelog/exceptions.py
+qslstudio/wavelog/models.py
 tests/test_components.py
 tests/test_image_template.py
 tests/test_models.py
