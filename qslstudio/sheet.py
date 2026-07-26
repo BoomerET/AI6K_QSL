@@ -170,7 +170,7 @@ class Sheet:
             panel_x_in,
             panel_y_in,
             element.x_in,
-            element.y_in,
+            element.y_in + element.height_in,
         )
 
         width_pt = element.width_in * inch
