@@ -15,13 +15,16 @@ qslstudio/components.py
 qslstudio/elements.py
 qslstudio/front.py
 qslstudio/layout.py
+qslstudio/live_back.py
 qslstudio/models.py
 qslstudio/sheet.py
 qslstudio/template.py
 qslstudio/test_connection.py
 qslstudio/adif/__init__.py
+qslstudio/adif/adapter.py
 qslstudio/adif/parser.py
 qslstudio/wavelog/__init__.py
+qslstudio/wavelog/adapter.py
 qslstudio/wavelog/client.py
 qslstudio/wavelog/config.py
 qslstudio/wavelog/exceptions.py
