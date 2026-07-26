@@ -146,9 +146,9 @@
                         <td>{{ qso.time_utc }}</td>
                         <td>{{ qso.band }}</td>
                         <td>{{ qso.mode }}</td>
-                        <td>{{ qso.frequency }}</td>
-                        <td>{{ qso.rst_sent }}</td>
-                        <td>{{ qso.rst_received }}</td>
+                        <td>{{ qso.frequency or "-" }}</td>
+                        <td>{{ qso.rst_sent or "-" }}</td>
+                        <td>{{ qso.rst_received or "-" }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
