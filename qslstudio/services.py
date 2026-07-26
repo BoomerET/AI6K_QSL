@@ -32,8 +32,6 @@ def qso_sort_key(record: dict[str, str]) -> datetime:
 def fetch_recent_qsos(
     limit: int = 50,
 ) -> tuple[StationProfile, list[QSO]]:
-    """Download recent QSOs and the active station profile from Wavelog."""
-
     config = WavelogConfig.load(WAVELOG_CONFIG)
     client = WavelogClient(config)
 
@@ -86,8 +84,6 @@ def generate_back_pdf(
     profile: StationProfile,
     output_path: Path,
 ) -> Path:
-    """Render selected QSOs into a printable back-side PDF."""
-
     if not qsos:
         raise ValueError("At least one QSO is required.")
 
@@ -113,3 +109,4 @@ def generate_back_pdf(
     )
 
     return sheet.export_pdf(output_path)
+
