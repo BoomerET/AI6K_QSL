@@ -68,6 +68,39 @@
             color: #172554;
         }
 
+        .actions {
+            align-items: center;
+            display: flex;
+            gap: 0.75rem;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .actions button {
+            background: #172554;
+            border: 0;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            font: inherit;
+            font-weight: 600;
+            padding: 0.7rem 1rem;
+        }
+
+        .actions button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .selection-count {
+            color: #4b5563;
+            font-size: 0.95rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -83,6 +116,12 @@
 
         th {
             background: #f8fafc;
+        }
+
+        th:first-child,
+        td:first-child {
+            text-align: center;
+            width: 1%;
         }
 
         tbody tr:hover {
@@ -124,35 +163,64 @@
         {% endif %}
 
         {% if qsos %}
-            <table>
-                <thead>
-                <tr>
-                    <th>Callsign</th>
-                    <th>Date</th>
-                    <th>Time UTC</th>
-                    <th>Band</th>
-                    <th>Mode</th>
-                    <th>Frequency</th>
-                    <th>RST Sent</th>
-                    <th>RST Received</th>
-                </tr>
-                </thead>
+            <form action="/generate" method="post">
+                <div class="actions">
+                    <div class="selection-count" id="selection-count">
+                        No QSOs selected
+                    </div>
+                    <button id="generate-button" type="submit" disabled>
+                        Generate PDF
+                    </button>
+                </div>
 
-                <tbody>
-                {% for qso in qsos %}
-                    <tr>
-                        <td><strong>{{ qso.contacted_callsign }}</strong></td>
-                        <td>{{ qso.date }}</td>
-                        <td>{{ qso.time_utc }}</td>
-                        <td>{{ qso.band }}</td>
-                        <td>{{ qso.mode }}</td>
-                        <td>{{ qso.frequency or "-" }}</td>
-                        <td>{{ qso.rst_sent or "-" }}</td>
-                        <td>{{ qso.rst_received or "-" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>
+                                <input
+                                    aria-label="Select all QSOs"
+                                    id="select-all"
+                                    type="checkbox"
+                                >
+                            </th>
+                            <th>Callsign</th>
+                            <th>Date</th>
+                            <th>Time UTC</th>
+                            <th>Band</th>
+                            <th>Mode</th>
+                            <th>Frequency</th>
+                            <th>RST Sent</th>
+                            <th>RST Received</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        {% for qso in qsos %}
+                            <tr>
+                                <td>
+                                    <input
+                                        aria-label="Select {{ qso.contacted_callsign }}"
+                                        class="qso-checkbox"
+                                        name="selected_qsos"
+                                        type="checkbox"
+                                        value="{{ loop.index0 }}"
+                                    >
+                                </td>
+                                <td><strong>{{ qso.contacted_callsign }}</strong></td>
+                                <td>{{ qso.date }}</td>
+                                <td>{{ qso.time_utc }}</td>
+                                <td>{{ qso.band }}</td>
+                                <td>{{ qso.mode }}</td>
+                                <td>{{ qso.frequency or "-" }}</td>
+                                <td>{{ qso.rst_sent or "-" }}</td>
+                                <td>{{ qso.rst_received or "-" }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </form>
         {% elif not error_message %}
             <div class="empty">
                 Wavelog returned no contacts.
@@ -160,6 +228,41 @@
         {% endif %}
     </section>
 </main>
+
+<script>
+    const qsoCheckboxes = Array.from(
+        document.querySelectorAll(".qso-checkbox")
+    );
+    const selectAll = document.querySelector("#select-all");
+    const generateButton = document.querySelector("#generate-button");
+    const selectionCount = document.querySelector("#selection-count");
+
+    function updateSelectionState() {
+        const selectedCount = qsoCheckboxes.filter(
+            checkbox => checkbox.checked
+        ).length;
+
+        generateButton.disabled = selectedCount === 0;
+        selectionCount.textContent = selectedCount === 1
+            ? "1 QSO selected"
+            : `${selectedCount} QSOs selected`;
+
+        selectAll.checked = selectedCount === qsoCheckboxes.length;
+        selectAll.indeterminate = selectedCount > 0
+            && selectedCount < qsoCheckboxes.length;
+    }
+
+    selectAll.addEventListener("change", () => {
+        qsoCheckboxes.forEach(checkbox => {
+            checkbox.checked = selectAll.checked;
+        });
+        updateSelectionState();
+    });
+
+    qsoCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener("change", updateSelectionState);
+    });
+</script>
 </body>
 </html>
 
