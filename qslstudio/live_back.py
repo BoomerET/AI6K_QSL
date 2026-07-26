@@ -12,10 +12,12 @@ from .template import TemplateContext, load_card_template
 from .wavelog.client import WavelogClient
 from .wavelog.config import WavelogConfig
 from .wavelog.adapter import station_profile_from_wavelog
+from .station_config import StationConfig
 
 
 ROOT = Path(__file__).resolve().parents[1]
 LIVE_OUTPUT = ROOT / "output" / "AI6K_QSL_live_back.pdf"
+STATION_CONFIG = ROOT / "config" / "station.yaml"
 
 def qso_sort_key(record: dict[str, str]) -> datetime:
     date = record.get("QSO_DATE", "00010101")
@@ -30,6 +32,7 @@ def generate(output_path: Path = LIVE_OUTPUT) -> Path:
     #config = WavelogConfig.load()
     config = WavelogConfig.load(Path("config/config.yaml"))
     client = WavelogClient(config)
+    station_config = StationConfig.load(STATION_CONFIG)
 
     print("Downloading QSOs from Wavelog...")
 
@@ -72,9 +75,9 @@ def generate(output_path: Path = LIVE_OUTPUT) -> Path:
 
     profile = station_profile_from_wavelog(
         wavelog_profile,
-        operator_name="David Berkompas",
-        rig="Icom IC-7300",
-        power="100 W",
+        operator_name=station_config.operator_name,
+        rig=station_config.rig,
+        power=station_config.power,
     )
     
     stock = Cardstock.load(CARDSTOCK_CONFIG)
