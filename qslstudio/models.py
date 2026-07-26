@@ -19,6 +19,7 @@ class QSO:
     contacted_callsign: str
     date: str
     time_utc: str
+    band: str
     frequency: str
     mode: str
     rst_sent: str
