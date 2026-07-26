@@ -3,10 +3,8 @@ from datetime import datetime
 from .adif import parse_adif, qso_from_adif
 from .back import (
     CARDSTOCK_CONFIG,
-    OUTPUT,
     PRINTER_CONFIG,
     TEMPLATE,
-    demo_profile,
 )
 from .layout import Cardstock, PrinterCalibration
 from .sheet import Sheet
@@ -71,24 +69,10 @@ def generate(output_path: Path = LIVE_OUTPUT) -> Path:
     )[:4]
     
     qsos = [qso_from_adif(record) for record in newest_records]
-    
-    station_profiles = client.get_station_profiles()
-
-    if not station_profiles:
-        raise RuntimeError("Wavelog returned no station profiles.")
-
-    wavelog_profile = next(
-        (
-            station_profile
-            for station_profile in station_profiles
-            if station_profile.active
-        ),
-        station_profiles[0],
-    )
 
     profile = station_profile_from_wavelog(
         wavelog_profile,
-        name="David Berkompas",
+        operator_name="David Berkompas",
         rig="Icom IC-7300",
         power="100 W",
     )

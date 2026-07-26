@@ -5,17 +5,8 @@ from typing import Any
 import yaml
 
 from .card import Card
-from .components import (
-    ComponentContext,
-    build_qso_table,
-    build_station_signature,
-)
-from .elements import (
-    ImageElement,
-    LineElement,
-    RectangleElement,
-    TextElement,
-)
+from .components import ComponentContext, build_qso_table, build_station_signature
+from .elements import ImageElement, LineElement, RectangleElement, TextElement
 
 
 @dataclass(frozen=True)
@@ -39,13 +30,21 @@ def _require_float(data: dict[str, Any], key: str) -> float:
     return float(data[key])
 
 
+def _resolve_asset_path(template_path: Path, value: str) -> str:
+    asset_path = Path(value).expanduser()
+    if asset_path.is_absolute():
+        return str(asset_path)
+    return str((template_path.parent / asset_path).resolve())
+
+
 def load_card_template(
     path: Path,
     context: TemplateContext | None = None,
 ) -> Card:
+    path = Path(path).resolve()
     context = context or TemplateContext({})
     component_context = ComponentContext(context.values)
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
 
     card_data = data.get("card", {})
     card = Card(
@@ -94,9 +93,14 @@ def load_card_template(
             )
 
         elif element_type == "image":
+            if "file" not in raw:
+                raise ValueError(f"Image element {index} is missing 'file'.")
+
+            rendered_file = str(context.render(raw["file"]))
+
             card.add(
                 ImageElement(
-                    file=str(context.render(raw["file"])),
+                    file=_resolve_asset_path(path, rendered_file),
                     x_in=_require_float(raw, "x_in"),
                     y_in=_require_float(raw, "y_in"),
                     width_in=_require_float(raw, "width_in"),
