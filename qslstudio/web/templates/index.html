@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>AI6K QSL Studio</title>
+
+    <style>
+        :root {
+            color-scheme: light;
+            font-family:
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        body {
+            margin: 0;
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        header {
+            background: #172554;
+            color: white;
+            padding: 1.25rem 2rem;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.6rem;
+        }
+
+        header p {
+            margin: 0.35rem 0 0;
+            opacity: 0.85;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .panel {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 4px rgb(0 0 0 / 12%);
+        }
+
+        .error {
+            border-left: 5px solid #b91c1c;
+            background: #fef2f2;
+            color: #7f1d1d;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .station {
+            margin-bottom: 1.25rem;
+        }
+
+        .station strong {
+            color: #172554;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 0.7rem;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        th {
+            background: #f8fafc;
+        }
+
+        tbody tr:hover {
+            background: #f8fafc;
+        }
+
+        .empty {
+            padding: 2rem;
+            text-align: center;
+            color: #6b7280;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>AI6K QSL Studio</h1>
+    <p>Wavelog QSL card generator</p>
+</header>
+
+<main>
+    {% if error_message %}
+        <div class="error">
+            <strong>Unable to retrieve Wavelog contacts.</strong><br>
+            {{ error_message }}
+        </div>
+    {% endif %}
+
+    <section class="panel">
+        {% if profile %}
+            <div class="station">
+                Station:
+                <strong>{{ profile.callsign }}</strong>
+
+                {% if profile.location %}
+                    — {{ profile.location }}
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if qsos %}
+            <table>
+                <thead>
+                <tr>
+                    <th>Callsign</th>
+                    <th>Date</th>
+                    <th>Time UTC</th>
+                    <th>Band</th>
+                    <th>Mode</th>
+                    <th>Frequency</th>
+                    <th>RST Sent</th>
+                    <th>RST Received</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for qso in qsos %}
+                    <tr>
+                        <td><strong>{{ qso.contacted_callsign }}</strong></td>
+                        <td>{{ qso.date }}</td>
+                        <td>{{ qso.time_utc }}</td>
+                        <td>{{ qso.band }}</td>
+                        <td>{{ qso.mode }}</td>
+                        <td>{{ qso.frequency }}</td>
+                        <td>{{ qso.rst_sent }}</td>
+                        <td>{{ qso.rst_received }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% elif not error_message %}
+            <div class="empty">
+                Wavelog returned no contacts.
+            </div>
+        {% endif %}
+    </section>
+</main>
+</body>
+</html>
+
