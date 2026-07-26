@@ -14,7 +14,6 @@ def generate(output_path: Path = OUTPUT) -> Path:
     stock = Cardstock.load(CARDSTOCK_CONFIG)
     printer = PrinterCalibration.load(PRINTER_CONFIG)
 
-    #profile = demo_profile()
     sheet = Sheet(stock, printer)
 
     return sheet.export_pdf(output_path)
