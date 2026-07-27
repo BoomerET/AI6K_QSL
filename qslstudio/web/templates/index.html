@@ -97,6 +97,19 @@
             font-size: 0.95rem;
         }
 
+        .print-profile-selector,
+        .card-side-selector {
+            margin-bottom: 1rem;
+        }
+
+        .card-side-selector {
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            display: flex;
+            gap: 1.25rem;
+            padding: 0.75rem 1rem 1rem;
+        }
+
         .table-wrapper {
             overflow-x: auto;
         }
@@ -180,6 +193,12 @@
                     <p class="profile-description" id="profile-description"></p>
                 </div>
 
+                <fieldset class="card-side-selector">
+                    <legend><strong>Card side</strong></legend>
+                    <label><input type="radio" name="card_side" value="back" checked> Back</label>
+                    <label><input type="radio" name="card_side" value="front"> Front</label>
+                </fieldset>
+
                 <div class="actions">
                     <div class="selection-count" id="selection-count">
                         No QSOs selected
@@ -254,6 +273,9 @@
     const selectionCount = document.querySelector("#selection-count");
     const printProfile = document.querySelector("#print_profile_id");
     const profileDescription = document.querySelector("#profile-description");
+    const cardSideOptions = Array.from(
+        document.querySelectorAll('input[name="card_side"]')
+    );
 
     function updateProfileDescription() {
         const selectedOption = printProfile.options[printProfile.selectedIndex];
@@ -262,6 +284,17 @@
 
     printProfile.addEventListener("change", updateProfileDescription);
     updateProfileDescription();
+
+    function updateGenerateButtonText() {
+        const selectedSide = cardSideOptions.find(option => option.checked);
+        const sideLabel = selectedSide?.value === "front" ? "Front" : "Back";
+        generateButton.textContent = `Generate ${sideLabel} PDF`;
+    }
+
+    cardSideOptions.forEach(option => {
+        option.addEventListener("change", updateGenerateButtonText);
+    });
+    updateGenerateButtonText();
 
     function updateSelectionState() {
         const selectedCount = qsoCheckboxes.filter(

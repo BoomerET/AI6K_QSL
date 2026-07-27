@@ -4,11 +4,9 @@ card:
 
 elements:
   - type: image
-    file: ../images/front-background.png
-
-    x_in: 0.1
-    y_in: 0.075
-    width_in: 5.3
-    height_in: 3.3
+    file: ../assets/qsl-front.png
+    x_in: 0.0
+    y_in: 0.0
+    width_in: 5.5
+    height_in: 3.5
     preserve_aspect_ratio: false
-  

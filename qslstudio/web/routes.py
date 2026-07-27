@@ -9,7 +9,7 @@ from ..print_profiles import (
     get_print_profile,
     list_print_profiles,
 )
-from ..services import fetch_recent_qsos, generate_back_pdf
+from ..services import fetch_recent_qsos, generate_qsl_pdf
 from ..wavelog.config import WavelogConfig
 from .common import connection_error_message, templates
 
@@ -49,6 +49,7 @@ def generate_selected_qsl_cards(
     background_tasks: BackgroundTasks,
     selected_qsos: list[int] = Form(default=[]),
     print_profile_id: str = Form(default=""),
+    card_side: str = Form(default="back"),
 ):
     if not WavelogConfig.is_configured():
         return RedirectResponse(url="/settings", status_code=303)
@@ -57,6 +58,12 @@ def generate_selected_qsl_cards(
         raise HTTPException(
             status_code=400,
             detail="Select at least one QSO before generating a PDF.",
+        )
+
+    if card_side not in {"front", "back"}:
+        raise HTTPException(
+            status_code=400,
+            detail="The selected card side is not available.",
         )
 
     selected_profile_id = print_profile_id or get_default_print_profile_id()
@@ -100,10 +107,11 @@ def generate_selected_qsl_cards(
         output_path = Path(temporary_file.name)
 
     try:
-        generate_back_pdf(
+        generate_qsl_pdf(
             selected,
             profile,
             output_path,
+            card_side=card_side,
             print_profile_id=print_profile.profile_id,
         )
     except Exception:
@@ -115,7 +123,7 @@ def generate_selected_qsl_cards(
     return FileResponse(
         path=output_path,
         media_type="application/pdf",
-        filename=print_profile.effective_download_filename,
+        filename=print_profile.download_filename_for(card_side),
         background=background_tasks,
     )
 
