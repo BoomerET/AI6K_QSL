@@ -6,3 +6,6 @@ output/*.pdf
 
 # Milestone installer backups
 .milestone*-backup-*/
+
+# Local configuration containing secrets
+config/config.yaml
