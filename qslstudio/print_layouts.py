@@ -22,6 +22,7 @@ class PrintLayout(Protocol):
         qsos: Sequence[QSO],
         profile: StationProfile,
         output_path: Path,
+        printer_config: Path = PRINTER_CONFIG,
     ) -> Path:
         ...
 
@@ -43,6 +44,7 @@ class LetterFourUpLayout:
         qsos: Sequence[QSO],
         profile: StationProfile,
         output_path: Path,
+        printer_config: Path = PRINTER_CONFIG,
     ) -> Path:
         if not qsos:
             raise ValueError("At least one QSO is required.")
@@ -58,7 +60,7 @@ class LetterFourUpLayout:
             origin_y_in=0.0,
             strip_width_in=1.5,
         )
-        printer = PrinterCalibration.load(PRINTER_CONFIG)
+        printer = PrinterCalibration.load(printer_config)
         sheet = Sheet(stock, printer)
 
         for qso in qsos:
@@ -95,12 +97,13 @@ class ConfiguredCardstockLayout:
         qsos: Sequence[QSO],
         profile: StationProfile,
         output_path: Path,
+        printer_config: Path = PRINTER_CONFIG,
     ) -> Path:
         if not qsos:
             raise ValueError("At least one QSO is required.")
 
         stock = Cardstock.load(CARDSTOCK_CONFIG)
-        printer = PrinterCalibration.load(PRINTER_CONFIG)
+        printer = PrinterCalibration.load(printer_config)
         sheet = Sheet(stock, printer)
 
         for qso in qsos:
