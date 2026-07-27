@@ -3,3 +3,6 @@ __pycache__/
 *.py[cod]
 output/*.pdf
 !output/.gitkeep
+
+# Milestone installer backups
+.milestone*-backup-*/
