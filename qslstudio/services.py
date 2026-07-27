@@ -3,7 +3,10 @@ from pathlib import Path
 
 from .adif import parse_adif, qso_from_adif
 from .models import QSO, StationProfile
-from .print_layouts import DEFAULT_LAYOUT_ID, get_print_layout
+from .print_profiles import (
+    get_default_print_profile_id,
+    get_print_profile,
+)
 from .wavelog.adapter import station_profile_from_wavelog
 from .wavelog.client import WavelogClient
 from .wavelog.config import WavelogConfig
@@ -91,8 +94,14 @@ def generate_back_pdf(
     qsos: list[QSO],
     profile: StationProfile,
     output_path: Path,
-    layout_id: str = DEFAULT_LAYOUT_ID,
+    print_profile_id: str | None = None,
 ) -> Path:
-    layout = get_print_layout(layout_id)
-    return layout.render(qsos, profile, output_path)
+    selected_profile_id = print_profile_id or get_default_print_profile_id()
+    print_profile = get_print_profile(selected_profile_id)
+    return print_profile.layout.render(
+        qsos,
+        profile,
+        output_path,
+        printer_config=print_profile.printer_config,
+    )
 

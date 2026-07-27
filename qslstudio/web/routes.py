@@ -4,10 +4,10 @@ from tempfile import NamedTemporaryFile
 from fastapi import APIRouter, BackgroundTasks, Form, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 
-from ..print_layouts import (
-    DEFAULT_LAYOUT_ID,
-    get_print_layout,
-    list_print_layouts,
+from ..print_profiles import (
+    get_default_print_profile_id,
+    get_print_profile,
+    list_print_profiles,
 )
 from ..services import fetch_recent_qsos, generate_back_pdf
 from ..wavelog.config import WavelogConfig
@@ -38,8 +38,8 @@ def index(request: Request):
             "profile": profile,
             "qsos": qsos,
             "error_message": error_message,
-            "print_layouts": list_print_layouts(),
-            "default_layout_id": DEFAULT_LAYOUT_ID,
+            "print_profiles": list_print_profiles(),
+            "default_print_profile_id": get_default_print_profile_id(),
         },
     )
 
@@ -48,7 +48,7 @@ def index(request: Request):
 def generate_selected_qsl_cards(
     background_tasks: BackgroundTasks,
     selected_qsos: list[int] = Form(default=[]),
-    layout_id: str = Form(default=DEFAULT_LAYOUT_ID),
+    print_profile_id: str = Form(default=""),
 ):
     if not WavelogConfig.is_configured():
         return RedirectResponse(url="/settings", status_code=303)
@@ -59,12 +59,14 @@ def generate_selected_qsl_cards(
             detail="Select at least one QSO before generating a PDF.",
         )
 
+    selected_profile_id = print_profile_id or get_default_print_profile_id()
+
     try:
-        layout = get_print_layout(layout_id)
+        print_profile = get_print_profile(selected_profile_id)
     except KeyError as exc:
         raise HTTPException(
             status_code=400,
-            detail="The selected print layout is not available.",
+            detail="The selected print profile is not available.",
         ) from exc
 
     try:
@@ -102,7 +104,7 @@ def generate_selected_qsl_cards(
             selected,
             profile,
             output_path,
-            layout_id=layout.layout_id,
+            print_profile_id=print_profile.profile_id,
         )
     except Exception:
         output_path.unlink(missing_ok=True)
@@ -113,7 +115,7 @@ def generate_selected_qsl_cards(
     return FileResponse(
         path=output_path,
         media_type="application/pdf",
-        filename=layout.download_filename,
+        filename=print_profile.effective_download_filename,
         background=background_tasks,
     )
 
@@ -124,5 +126,5 @@ def health():
         "status": "ok",
         "application": "AI6K QSL Studio",
         "wavelog_configured": WavelogConfig.is_configured(),
-        "default_layout": DEFAULT_LAYOUT_ID,
+        "default_print_profile": get_default_print_profile_id(),
     }

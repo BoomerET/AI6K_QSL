@@ -1,0 +1,16 @@
+default_profile: epson-configured-cardstock
+
+profiles:
+  epson-configured-cardstock:
+    name: Epson ET-3760 — Configured cardstock
+    description: Uses the configured cardstock dimensions and Epson ET-3760 calibration.
+    layout_id: configured-cardstock
+    printer_config: config/printer.yaml
+    download_filename: QSL-cards-configured-cardstock.pdf
+
+  epson-letter-4up:
+    name: Epson ET-3760 — US Letter 4-up
+    description: Prints four landscape 5.5 × 3.5 inch cards per US Letter sheet.
+    layout_id: letter-4up
+    printer_config: config/printer.yaml
+    download_filename: QSL-cards-letter-4up.pdf

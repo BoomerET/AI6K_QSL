@@ -164,26 +164,21 @@
 
         {% if qsos %}
             <form action="/generate" method="post">
-        <div class="print-layout-selector">
-            <label for="layout_id"><strong>Print layout</strong></label>
-            <select id="layout_id" name="layout_id">
-                {% for layout in print_layouts %}
-                <option
-                    value="{{ layout.layout_id }}"
-                    {% if layout.layout_id == default_layout_id %}selected{% endif %}
-                >
-                    {{ layout.name }}
-                </option>
-                {% endfor %}
-            </select>
-            <p class="layout-description">
-                {% for layout in print_layouts %}
-                    {% if layout.layout_id == default_layout_id %}
-                        {{ layout.description }}
-                    {% endif %}
-                {% endfor %}
-            </p>
-        </div>
+                <div class="print-profile-selector">
+                    <label for="print_profile_id"><strong>Print profile</strong></label>
+                    <select id="print_profile_id" name="print_profile_id">
+                        {% for print_profile in print_profiles %}
+                        <option
+                            value="{{ print_profile.profile_id }}"
+                            data-description="{{ print_profile.description }}"
+                            {% if print_profile.profile_id == default_print_profile_id %}selected{% endif %}
+                        >
+                            {{ print_profile.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <p class="profile-description" id="profile-description"></p>
+                </div>
 
                 <div class="actions">
                     <div class="selection-count" id="selection-count">
@@ -257,6 +252,16 @@
     const selectAll = document.querySelector("#select-all");
     const generateButton = document.querySelector("#generate-button");
     const selectionCount = document.querySelector("#selection-count");
+    const printProfile = document.querySelector("#print_profile_id");
+    const profileDescription = document.querySelector("#profile-description");
+
+    function updateProfileDescription() {
+        const selectedOption = printProfile.options[printProfile.selectedIndex];
+        profileDescription.textContent = selectedOption.dataset.description || "";
+    }
+
+    printProfile.addEventListener("change", updateProfileDescription);
+    updateProfileDescription();
 
     function updateSelectionState() {
         const selectedCount = qsoCheckboxes.filter(
