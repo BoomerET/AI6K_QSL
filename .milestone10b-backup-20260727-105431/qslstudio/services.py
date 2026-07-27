@@ -2,8 +2,12 @@ from datetime import datetime
 from pathlib import Path
 
 from .adif import parse_adif, qso_from_adif
+from .back import CARDSTOCK_CONFIG, PRINTER_CONFIG, TEMPLATE
+from .layout import Cardstock, PrinterCalibration
 from .models import QSO, StationProfile
 from .print_layouts import DEFAULT_LAYOUT_ID, get_print_layout
+from .sheet import Sheet
+from .template import TemplateContext, load_card_template
 from .wavelog.adapter import station_profile_from_wavelog
 from .wavelog.client import WavelogClient
 from .wavelog.config import WavelogConfig
@@ -93,6 +97,31 @@ def generate_back_pdf(
     output_path: Path,
     layout_id: str = DEFAULT_LAYOUT_ID,
 ) -> Path:
-    layout = get_print_layout(layout_id)
-    return layout.render(qsos, profile, output_path)
+    if not qsos:
+        raise ValueError("At least one QSO is required.")
+
+    get_print_layout(layout_id)
+
+    stock = Cardstock.load(CARDSTOCK_CONFIG)
+    printer = PrinterCalibration.load(PRINTER_CONFIG)
+    sheet = Sheet(stock, printer)
+
+    for qso in qsos:
+        values = {}
+        values.update(profile.to_template_values())
+        values.update(qso.to_template_values())
+
+        sheet.add_card(
+            load_card_template(
+                TEMPLATE,
+                TemplateContext(values),
+            )
+        )
+
+    output_path.parent.mkdir(
+        parents=True,
+        exist_ok=True,
+    )
+
+    return sheet.export_pdf(output_path)
 
