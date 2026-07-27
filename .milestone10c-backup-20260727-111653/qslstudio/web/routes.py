@@ -4,11 +4,7 @@ from tempfile import NamedTemporaryFile
 from fastapi import APIRouter, BackgroundTasks, Form, HTTPException, Request
 from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 
-from ..print_layouts import (
-    DEFAULT_LAYOUT_ID,
-    get_print_layout,
-    list_print_layouts,
-)
+from ..print_layouts import DEFAULT_LAYOUT_ID, get_print_layout
 from ..services import fetch_recent_qsos, generate_back_pdf
 from ..wavelog.config import WavelogConfig
 from .common import connection_error_message, templates
@@ -38,8 +34,6 @@ def index(request: Request):
             "profile": profile,
             "qsos": qsos,
             "error_message": error_message,
-            "print_layouts": list_print_layouts(),
-            "default_layout_id": DEFAULT_LAYOUT_ID,
         },
     )
 
