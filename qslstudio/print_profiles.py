@@ -47,6 +47,18 @@ class PrintProfile:
     def effective_download_filename(self) -> str:
         return self.download_filename or self.layout.download_filename
 
+    def download_filename_for(self, card_side: str) -> str:
+        if card_side not in {"front", "back"}:
+            raise ValueError(f"Unsupported card side: {card_side!r}")
+
+        filename = self.effective_download_filename
+        path = Path(filename)
+        stem = path.stem
+        for suffix in ("-front", "-back"):
+            if stem.endswith(suffix):
+                stem = stem.removesuffix(suffix)
+        return f"{stem}-{card_side}{path.suffix or '.pdf'}"
+
 
 def load_print_profiles(path: Path = PRINT_PROFILES_CONFIG) -> tuple[str, dict[str, PrintProfile]]:
     data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}

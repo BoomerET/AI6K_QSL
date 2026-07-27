@@ -23,6 +23,7 @@ class PrintLayout(Protocol):
         profile: StationProfile,
         output_path: Path,
         printer_config: Path = PRINTER_CONFIG,
+        template_path: Path = TEMPLATE,
     ) -> Path:
         ...
 
@@ -45,6 +46,7 @@ class LetterFourUpLayout:
         profile: StationProfile,
         output_path: Path,
         printer_config: Path = PRINTER_CONFIG,
+        template_path: Path = TEMPLATE,
     ) -> Path:
         if not qsos:
             raise ValueError("At least one QSO is required.")
@@ -70,7 +72,7 @@ class LetterFourUpLayout:
 
             sheet.add_card(
                 load_card_template(
-                    TEMPLATE,
+                    template_path,
                     TemplateContext(values),
                 )
             )
@@ -98,6 +100,7 @@ class ConfiguredCardstockLayout:
         profile: StationProfile,
         output_path: Path,
         printer_config: Path = PRINTER_CONFIG,
+        template_path: Path = TEMPLATE,
     ) -> Path:
         if not qsos:
             raise ValueError("At least one QSO is required.")
@@ -113,7 +116,7 @@ class ConfiguredCardstockLayout:
 
             sheet.add_card(
                 load_card_template(
-                    TEMPLATE,
+                    template_path,
                     TemplateContext(values),
                 )
             )

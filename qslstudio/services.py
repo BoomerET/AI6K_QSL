@@ -14,6 +14,8 @@ from .wavelog.config import WavelogConfig
 
 ROOT = Path(__file__).resolve().parents[1]
 WAVELOG_CONFIG = ROOT / "config" / "config.yaml"
+BACK_TEMPLATE = ROOT / "templates" / "back.yaml"
+FRONT_TEMPLATE = ROOT / "templates" / "front.yaml"
 
 
 def qso_sort_key(record: dict[str, str]) -> datetime:
@@ -90,18 +92,49 @@ def fetch_recent_qsos(
     return profile, qsos
 
 
+
+def generate_qsl_pdf(
+    qsos: list[QSO],
+    profile: StationProfile,
+    output_path: Path,
+    card_side: str = "back",
+    print_profile_id: str | None = None,
+) -> Path:
+    if card_side not in {"front", "back"}:
+        raise ValueError(f"Unsupported card side: {card_side!r}")
+
+    selected_profile_id = print_profile_id or get_default_print_profile_id()
+    print_profile = get_print_profile(selected_profile_id)
+    template_path = FRONT_TEMPLATE if card_side == "front" else BACK_TEMPLATE
+
+    return print_profile.layout.render(
+        qsos,
+        profile,
+        output_path,
+        printer_config=print_profile.printer_config,
+        template_path=template_path,
+    )
+
 def generate_back_pdf(
     qsos: list[QSO],
     profile: StationProfile,
     output_path: Path,
     print_profile_id: str | None = None,
 ) -> Path:
-    selected_profile_id = print_profile_id or get_default_print_profile_id()
-    print_profile = get_print_profile(selected_profile_id)
-    return print_profile.layout.render(
-        qsos,
-        profile,
-        output_path,
-        printer_config=print_profile.printer_config,
+    return generate_qsl_pdf(
+        qsos, profile, output_path,
+        card_side="back",
+        print_profile_id=print_profile_id,
     )
 
+def generate_front_pdf(
+    qsos: list[QSO],
+    profile: StationProfile,
+    output_path: Path,
+    print_profile_id: str | None = None,
+) -> Path:
+    return generate_qsl_pdf(
+        qsos, profile, output_path,
+        card_side="front",
+        print_profile_id=print_profile_id,
+    )
