@@ -26,10 +26,11 @@ class Sheet:
     cards: list[Card] = field(default_factory=list)
 
     def add_card(self, card: Card) -> None:
-        maximum = self.cardstock.columns * self.cardstock.rows
-        if len(self.cards) >= maximum:
-            raise ValueError(f"This sheet supports only {maximum} cards.")
         self.cards.append(card)
+
+    @property
+    def cards_per_page(self) -> int:
+        return self.cardstock.columns * self.cardstock.rows
 
     def _panel_origin(self, index: int) -> tuple[float, float]:
         col = index % self.cardstock.columns
@@ -239,8 +240,26 @@ class Sheet:
         )
         canvas.scale(self.printer.x_scale, self.printer.y_scale)
 
+        cards_per_page = self.cards_per_page
+
         for index, card in enumerate(self.cards):
-            panel_x_in, panel_y_in = self._panel_origin(index)
+            page_index = index // cards_per_page
+            panel_index = index % cards_per_page
+
+            if panel_index == 0 and page_index > 0:
+                canvas.restoreState()
+                canvas.showPage()
+                canvas.saveState()
+                canvas.translate(
+                    self.printer.x_offset_in * inch,
+                    -self.printer.y_offset_in * inch,
+                )
+                canvas.scale(
+                    self.printer.x_scale,
+                    self.printer.y_scale,
+                )
+
+            panel_x_in, panel_y_in = self._panel_origin(panel_index)
 
             for element in card.elements:
                 if isinstance(element, TextElement):
