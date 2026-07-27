@@ -1,0 +1,3 @@
+wavelog:
+  url: "https://your-wavelog.example.com"
+  api_key: "replace-with-your-api-key"
